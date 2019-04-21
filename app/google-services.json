@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "754873333093",
+    "firebase_url": "https://exp-notify.firebaseio.com",
+    "project_id": "exp-notify",
+    "storage_bucket": "exp-notify.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754873333093:android:a1c7917b03766ee4",
+        "android_client_info": {
+          "package_name": "project.itcs6166.com.expirynotify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "754873333093-p6a6sec89mu5u2vi8l9d5llnfdcit36c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS0ufj1S7cYfCZFm7UjnCVlMBzyQctdDg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "754873333093-p6a6sec89mu5u2vi8l9d5llnfdcit36c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
