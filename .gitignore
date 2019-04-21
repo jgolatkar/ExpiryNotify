@@ -9,6 +9,4 @@
 /build
 /captures
 .externalNativeBuild
-.gitignore
-
-*.json
+/app/google-services.json
