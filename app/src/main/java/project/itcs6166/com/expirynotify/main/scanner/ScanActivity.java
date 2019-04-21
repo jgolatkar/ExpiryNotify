@@ -6,8 +6,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -29,9 +31,12 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -49,6 +54,7 @@ public class ScanActivity extends AppCompatActivity {
     CameraSource cameraSource;
     TextView textView;
     BarcodeDetector barcodeDetector;
+    private List<Map<String, Object>>items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,8 +151,9 @@ public class ScanActivity extends AppCompatActivity {
                                     Intent intent = new Intent(ScanActivity.this, ShowListActivity.class);
                                     //intent.putExtra("items", (Serializable) document.getData().get("items"));
                                     //startActivity(intent);
-
-                                    ItemData.setItemData((ArrayList<Map<String, Object>>) document.getData().get("items"));
+                                    items = (ArrayList<Map<String, Object>>) document.getData().get("items");
+                                    saveData();
+                                    //ItemData.setItemData((ArrayList<Map<String, Object>>) document.getData().get("items"));
                                     Toast.makeText(ScanActivity.this, "Item List Created", Toast.LENGTH_SHORT).show();
                                     //Alarm Service Start
                                     AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -175,5 +182,15 @@ public class ScanActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+
+    private void saveData(){
+        SharedPreferences sf = getSharedPreferences("sharedList", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sf.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(items);
+        editor.putString("savedItems", json);
+        editor.apply();
     }
 }

@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.google.firebase.Timestamp;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -17,6 +18,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +53,7 @@ public class ShowListActivity extends AppCompatActivity {
         intent.putExtra("message","'hello");
         startService(intent);*/
 
-
+       // saveData();
 
     }
 
@@ -70,19 +72,35 @@ public class ShowListActivity extends AppCompatActivity {
                 Collections.sort(items, new Comparator<Map<String, Object>>() {
                     @Override
                     public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                        Timestamp timestamp1 = (Timestamp) o1.get("exp_date");
-                        Timestamp timestamp2 = (Timestamp) o2.get("exp_date");
+                        Map<String, Double> timesMapO1 = (LinkedTreeMap<String, Double>)o1.get("exp_date");
+                        Map<String, Double> timesMapO2 = (LinkedTreeMap<String, Double>)o2.get("exp_date");
+
+
+                        double secondsO1 = timesMapO1.get("seconds");
+                        double nanosecondsO1 = timesMapO1.get("nanoseconds");
+                        Timestamp timestamp1 = new Timestamp((long)secondsO1, (int)nanosecondsO1);
+
+                        double secondsO2 = timesMapO2.get("seconds");
+                        double nanosecondsO2 = timesMapO2.get("nanoseconds");
+                        Timestamp timestamp2 = new Timestamp((long)secondsO2, (int)nanosecondsO2);
+
+
                         return timestamp1.toDate().compareTo(timestamp2.toDate());
                     }
                 });
             Log.d(TAG, "initListViewData : data received : " + items);
             for (Map<String, Object> item : items) {
-                Timestamp timestamp = (Timestamp) item.get("exp_date");
+                Map<String, Double> timesMap = (LinkedTreeMap<String, Double>)item.get("exp_date");
+                double seconds = timesMap.get("seconds");
+                double nanoseconds = timesMap.get("nanoseconds");
+                Timestamp timestamp = new Timestamp((long)seconds, (int) nanoseconds);
+
                 String label = (String) item.get("label");
                 String exp_date = DateFormat.getDateInstance().format(timestamp.toDate());
                 Log.d(TAG, "initListViewData : label: " + label);
                 Log.d(TAG, "initListViewData : expiry date: " + exp_date);
                 if (!ItemData.getItemNames().contains(label) || !ItemData.getExpiryDates().contains(exp_date)) {
+                    // ToDo : replace this line with local lists .
                     ItemData.getItemNames().add(label);
                     ItemData.getExpiryDates().add(exp_date);
                 }
@@ -112,16 +130,16 @@ public class ShowListActivity extends AppCompatActivity {
 
     // for saving activity data into shared preference
     private void saveData(){
-        SharedPreferences sf = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences sf = getSharedPreferences("sharedList", MODE_PRIVATE);
         SharedPreferences.Editor editor = sf.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(ItemData.getItemData());
+        String json = gson.toJson(items);
         editor.putString("savedItems", json);
         editor.apply();
     }
 
     private void loadData(){
-        SharedPreferences sf = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences sf = getSharedPreferences("sharedList", MODE_PRIVATE);
         Gson gson = new Gson();
         String itemList = sf.getString("savedItems", null);
         Type type = new TypeToken<ArrayList<Map<String, Object>>>(){}.getType();
