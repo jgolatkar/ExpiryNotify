@@ -124,7 +124,9 @@ public class ShowListActivity extends AppCompatActivity {
     private void removeItem(int position){
             ItemData.getItemNames().remove(position);
             ItemData.getExpiryDates().remove(position);
-            ItemData.removeItemData(position);
+            //ItemData.removeItemData(position);
+            items.remove(position);
+
             mAdapter.notifyItemRemoved(position);
     }
 
