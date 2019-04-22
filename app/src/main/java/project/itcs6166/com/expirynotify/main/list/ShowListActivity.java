@@ -140,7 +140,7 @@ public class ShowListActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    private void loadData(){
+    public void loadData(){
         SharedPreferences sf = getSharedPreferences("sharedList", MODE_PRIVATE);
         Gson gson = new Gson();
         String itemList = sf.getString("savedItems", null);

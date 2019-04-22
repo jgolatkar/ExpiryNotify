@@ -1,5 +1,7 @@
 package project.itcs6166.com.expirynotify.main.common;
 
+import android.app.Application;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +14,7 @@ public class ItemData {
     public static List<Map<String, Object>> getItemData() {
         return itemData;
     }
+
 
     public static void setItemData(List<Map<String, Object>> itemData) {
         ItemData.itemData = itemData;
