@@ -56,7 +56,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             }
 
 
-            List<Map<String, Object>> itemData = ItemData.getItemData();
+            //List<Map<String, Object>> itemData = ItemData.getItemData();
             // compare current date with the expiry date of every item
             for(Map<String, Object> item : items){
                 Map<String, Double> timesMap = (LinkedTreeMap<String, Double>)item.get("exp_date");
@@ -67,23 +67,21 @@ public class NotificationReceiver extends BroadcastReceiver {
                 String exp_date = DateFormat.getDateInstance().format(timestamp.toDate());
 
 
-                if(exp_date.equals(curDate)){
+                if(timestamp.toDate().compareTo(new Date()) <= 0){
                     String label = (String) item.get("label");
 
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                             .setSmallIcon(R.drawable.ic_launcher_foreground)
                             .setContentTitle("SmartExpiry Notification")
-                            .setContentText(label + " is expiring today!")
+                            .setContentText(label + " has expired!")
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                             .setContentIntent(pendingIntent)
                             .setAutoCancel(true);
 
                     NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    // notificationId is a unique int for each notification that you must define
-
 
                     Log.d("Notify", "Alarm");
-
+                    // notificationId is a unique int for each notification
                     notificationManager.notify(new Random().nextInt(), builder.build());
                 }
             }

@@ -149,18 +149,37 @@ public class ScanActivity extends AppCompatActivity {
                                 if (document.exists()) {
                                     Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                                     Intent intent = new Intent(ScanActivity.this, ShowListActivity.class);
-                                    //intent.putExtra("items", (Serializable) document.getData().get("items"));
-                                    //startActivity(intent);
-                                    items = (ArrayList<Map<String, Object>>) document.getData().get("items");
-                                    saveData();
-                                    //ItemData.setItemData((ArrayList<Map<String, Object>>) document.getData().get("items"));
+                                    SharedPreferences sf = getSharedPreferences("sharedList", MODE_PRIVATE);
+
+                                    String itemList = sf.getString("savedItems", null);
+                                    Type type = new TypeToken<ArrayList<Map<String, Object>>>(){}.getType();
+                                    Gson gson = new Gson();
+
+                                    items = gson.fromJson(itemList, type);
+                                    if(items == null || items.size() == 0){
+                                        items = (ArrayList<Map<String, Object>>) document.getData().get("items");
+                                    }else{
+                                        List<Map<String, Object>> newItems  = (ArrayList<Map<String, Object>>) document.getData().get("items");
+                                        Log.d(TAG, "newItem data: " + newItems);
+
+                                        String json = gson.toJson(newItems);
+
+                                        List<Map<String, Object>> temp = gson.fromJson(json, type);
+
+                                        for(Map<String, Object> map : temp){
+                                            if(!items.contains(map)){
+                                                items.add(map);
+                                            }
+                                        }
+                                    }
+                                    saveData(); // save data into shared preference
                                     Toast.makeText(ScanActivity.this, "Item List Created", Toast.LENGTH_SHORT).show();
                                     //Alarm Service Start
                                     AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                                     //set alarm time, so that it wiil be triggered everyday at same time
                                     Calendar calendar = Calendar.getInstance();
-                                    calendar.set(Calendar.HOUR_OF_DAY, 1);
-                                    calendar.set(Calendar.MINUTE,4);
+                                    calendar.set(Calendar.HOUR_OF_DAY, 9);
+                                    calendar.set(Calendar.MINUTE,0);
 
                                     Intent notificationIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
                                     notificationIntent.setAction("DISPLAY_NOTIFICATION");
