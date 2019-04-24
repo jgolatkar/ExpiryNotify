@@ -104,7 +104,12 @@ public class ShowListActivity extends AppCompatActivity {
                     ItemData.getItemNames().add(label);
                     ItemData.getExpiryDates().add(exp_date);
                 }
+
             }
+            Log.d(TAG, "initListViewData : labels: " + ItemData.getItemNames());
+            Log.d(TAG, "initListViewData : expiry dates: " + ItemData.getExpiryDates());
+
+
 
             mAdapter.setOnItemClickListener(new ViewAdapter.OnItemClickListener() {
                 @Override

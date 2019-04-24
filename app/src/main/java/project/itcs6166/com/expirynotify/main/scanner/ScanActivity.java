@@ -178,8 +178,8 @@ public class ScanActivity extends AppCompatActivity {
                                     AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                                     //set alarm time, so that it wiil be triggered everyday at same time
                                     Calendar calendar = Calendar.getInstance();
-                                    calendar.set(Calendar.HOUR_OF_DAY, 9);
-                                    calendar.set(Calendar.MINUTE,0);
+                                    calendar.set(Calendar.HOUR_OF_DAY, 17);
+                                    calendar.set(Calendar.MINUTE,55);
 
                                     Intent notificationIntent = new Intent(getApplicationContext(), NotificationReceiver.class);
                                     notificationIntent.setAction("DISPLAY_NOTIFICATION");
