@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import project.itcs6166.com.expirynotify.R;
 import project.itcs6166.com.expirynotify.main.common.ItemData;
@@ -66,14 +67,16 @@ public class NotificationReceiver extends BroadcastReceiver {
                 String curDate = DateFormat.getDateInstance().format(new Date());
                 String exp_date = DateFormat.getDateInstance().format(timestamp.toDate());
 
-
-                if(timestamp.toDate().compareTo(new Date()) <= 0){
+                Date curr = new Date();
+                long diff = timestamp.toDate().getTime() - curr.getTime();
+                long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+                if(days >=0 && days <= 2){
                     String label = (String) item.get("label");
 
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                             .setSmallIcon(R.drawable.ic_launcher_foreground)
                             .setContentTitle("SmartExpiry Notification")
-                            .setContentText(label + " has expired!")
+                            .setContentText(label + " is expiring")
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                             .setContentIntent(pendingIntent)
                             .setAutoCancel(true);
